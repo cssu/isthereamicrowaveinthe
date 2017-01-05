@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-  <meta charset="UTF-8">
+  <meta charset='UTF-8'>
   <title>Does the CSSU have a microwave?</title>
   <style>
     #yes {
@@ -14,28 +14,30 @@
       transform: translate(-50%, -50%);
       text-align: center;
     }
-    #since{
+
+    #since {
+      font-size: 0.15em;
       margin: 0 auto;
       text-align: center;
-      font-size: 0.15em;
     }
   </style>
 </head>
 <body>
-  <div id="yes">
+  <div id='yes'>
     YES.
-    <div id="since"></div>
+    <p id='since'></p>
   </div>
   <script>
     //TODO: update this on commit automatically
-    var LAST_UPDATE = "Thu Jan 05 2017 10:00:54 GMT-0500 (EST)";
+    var LAST_UPDATE = 1483628415000;
+    var sinceEl = document.getElementById('since');
 
-    function getTimeSince(starttime){
-      let t = Date.parse(new Date()) - Date.parse(starttime);
-      let seconds = Math.floor( (t/1000) % 60 );
-      let minutes = Math.floor( (t/1000/60) % 60 );
-      let hours = Math.floor( (t/(1000*60*60)) % 24 );
-      let days = Math.floor( t/(1000*60*60*24) );
+    function getTimeSince(starttime) {
+      var t = +new Date - starttime; //Date.now() doesnt work before ie9
+      var seconds = Math.floor( (t/1000) % 60 );
+      var minutes = Math.floor( (t/1000/60) % 60 );
+      var hours = Math.floor( (t/(1000*60*60)) % 24 );
+      var days = Math.floor( t/(1000*60*60*24) );
       return {
         'total': t,
         'days': days,
@@ -45,56 +47,47 @@
       };
     }
 
-    function updateTimer(){
+    function pluralize(s, v) {
+      var s = s;
+      if(v > 1){
+        s += "s";
+      }
+      return s;
+    }
+
+    function updateTimer() {
       var time = getTimeSince(LAST_UPDATE);
-      var sinceEl = document.getElementById("since");
       
-      var countdownStr = "(updated ";
+      var countdownStr = '(updated ';
 
       var days = time.days;
       if(days > 0){
-        var desc = "days";
-        if(days == 1){
-          desc = "day";
-        }
-        countdownStr += days + " "+desc+", ";
+        countdownStr += days + ' '+pluralize("day" ,days)+', ';
       }
 
       var hours = time.hours ;
       if(hours > 0){
-        var desc = "hours";
-        if(hours == 1){
-          desc = "hour";
-        }
-        countdownStr += hours + " "+desc+", ";
+        countdownStr += hours + ' '+pluralize("hour", hours)+', ';
       }
 
       var minutes = time.minutes;
       if(minutes > 0){
-        var desc = "minutes";
-        if(hours == 1){
-          desc = "minute";
-        }
-        countdownStr += minutes + " "+desc+" and ";
+        countdownStr += minutes + ' '+pluralize("minute", minutes)+' and ';
       }
 
       var seconds = time.seconds;
       if(seconds > 0){
-        var desc = "seconds";
-        if(hours == 1){
-          desc = "second";
-        }
-        countdownStr += seconds + " "+desc+" ";
+        countdownStr += seconds + ' '+pluralize("second", seconds)+' ';
       }
      
-      countdownStr += "ago)";
+      countdownStr += 'ago)';
       
       sinceEl.innerHTML = countdownStr;
     }
 
 
     //smaller interval than 1s since people may open browser in between seconds
-    setInterval(updateTimer, 100)
+    setInterval(updateTimer, 100);
   </script>
 </body>
 </html>
