@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Does the CSSU have a microwave?</title>
   <style>
-    h1 {
+    #answer {
       font-size: 6em;
       font-weight: 700;
       margin: 0;
@@ -12,10 +12,83 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    #since {
+      font-size: 0.15em;
+      margin: 0 auto;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <h1>YES.</h1>
+  <div id="answer">
+    YES.
+    <p id="since"></p>
+  </div>
+  <script>
+    //TODO: update this on commit automatically
+    //update when #answer changes
+    var LAST_UPDATE = 1483628415000; //Thu Jan 05 2017 10:00:15 GMT-0500 (EST)
+
+    var sinceEl = document.getElementById('since');
+
+    function getTimeSince(starttime) {
+      var t = +new Date - starttime; //Date.now() doesnt work before ie9
+      var seconds = Math.floor( (t/1000) % 60 );
+      var minutes = Math.floor( (t/1000/60) % 60 );
+      var hours = Math.floor( (t/(1000*60*60)) % 24 );
+      var days = Math.floor( t/(1000*60*60*24) );
+      return {
+        'total': t,
+        'days': days,
+        'hours': hours,
+        'minutes': minutes,
+        'seconds': seconds
+      };
+    }
+
+    function pluralize(s, v) {
+      if(v > 1){
+        s += 's';
+      }
+      return s;
+    }
+
+    function updateTimer() {
+      var time = getTimeSince(LAST_UPDATE);
+      
+      var countdownStr = '(updated ';
+
+      var days = time.days;
+      if(days > 0){
+        countdownStr += days + ' '+pluralize("day" ,days)+', ';
+      }
+
+      var hours = time.hours ;
+      if(hours > 0){
+        countdownStr += hours + ' '+pluralize("hour", hours)+', ';
+      }
+
+      var minutes = time.minutes;
+      if(minutes > 0){
+        countdownStr += minutes + ' '+pluralize("minute", minutes)+' and ';
+      }
+
+      var seconds = time.seconds;
+      if(seconds > 0){
+        countdownStr += seconds + ' '+pluralize("second", seconds)+' ';
+      }
+     
+      countdownStr += 'ago)';
+      
+      sinceEl.innerText = countdownStr;
+    }
+
+
+    //smaller interval than 1s since people may open browser in between seconds
+    setInterval(updateTimer, 100);
+  </script>
 </body>
 </html>
